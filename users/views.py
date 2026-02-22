@@ -1,31 +1,27 @@
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from django.conf import settings
+from users.decorators import student_required, instructor_required
+
 
 @login_required
 def role_redirect(request):
-    profile = getattr(request.user, "profile", None)
-
-    if not profile:
-        return redirect(settings.LOGIN_URL)
-
-    role = profile.role.lower()
+    role = request.user.profile.role
 
     if role == "student":
         return redirect("student_dashboard")
-
-    if role == "instructor":
+    elif role == "instructor":
         return redirect("instructor_dashboard")
 
-    return HttpResponse("Invalid user role", status=403)
+    return render(request, "users/invalid_role.html", status=403)
 
 
 @login_required
+@student_required
 def student_dashboard(request):
-    return HttpResponse("Student dashboard")
+    return render(request, "users/student_dashboard.html")
 
 
 @login_required
+@instructor_required
 def instructor_dashboard(request):
-    return HttpResponse("Instructor dashboard")
+    return render(request, "users/instructor_dashboard.html")
