@@ -2,9 +2,19 @@ from django.http import JsonResponse
 from django.db import connections
 from django.db.utils import OperationalError
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
-    return HttpResponse("Logged in successfully")
+    role = request.user.profile.role
+
+    if role == "student":
+        return redirect("student_dashboard")
+    elif role == "instructor":
+        return redirect("instructor_dashboard")
+    else:
+        return redirect("/admin/")
 
 def health_check(request):
     try:

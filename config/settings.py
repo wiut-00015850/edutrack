@@ -106,6 +106,6 @@ X_FRAME_OPTIONS = "DENY"
 # HTTPS will be enforced later behind Nginx
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/login/"
 LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/users/redirect/"
+LOGOUT_REDIRECT_URL = "/login/"
