@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: edutrack_db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - edutrack_net
+
+  web:
+    build: .
+    container_name: edutrack_web
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - media:/app/media
+      - static:/app/staticfiles
+    ports:
+      - "8000:8000"
+    networks:
+      - edutrack_net
+
+volumes:
+  postgres_data:
+  media:
+  static:
+
+networks:
+  edutrack_net:
