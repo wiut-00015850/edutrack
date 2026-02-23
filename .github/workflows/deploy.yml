@@ -17,9 +17,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build containers
-        run: docker-compose build
+      - name: Build containers (Docker Compose v2)
+        run: docker compose build
 
       - name: Run tests (SQLite, CI mode)
-        run: |
-          docker-compose run --rm web python manage.py test
+        run: docker compose run --rm web python manage.py test
