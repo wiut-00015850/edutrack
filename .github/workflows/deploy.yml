@@ -21,4 +21,12 @@ jobs:
         run: docker compose build
 
       - name: Run Django tests
+        env:
+          DB_NAME: edutrack
+          DB_USER: edutrack_user
+          DB_PASSWORD: password
+          DB_HOST: db
+          DB_PORT: 5432
+          SECRET_KEY: ci-secret-key
+          DEBUG: "1"
         run: docker compose run --rm web python manage.py test
