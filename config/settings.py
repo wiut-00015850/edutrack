@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # local apps
-    "users",
+    "users.apps.UsersConfig",
     "courses",
     "assignments",
 ]
