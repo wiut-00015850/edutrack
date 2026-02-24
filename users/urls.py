@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import role_redirect, student_dashboard, instructor_dashboard
+from . import views
+
 
 urlpatterns = [
     path("redirect/", role_redirect, name="role_redirect"),

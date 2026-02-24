@@ -1,11 +1,29 @@
-{% extends "base.html" %} {% block content %}
-<h1>🎓 Student Dashboard</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Student Dashboard</title>
+  </head>
+  <body>
+    <h1>Welcome, {{ request.user.username }}</h1>
 
-<p>Welcome, {{ user.username }} 👋</p>
+    <h2>Your Courses</h2>
+    <ul>
+      {% for course in courses %}
+      <li>{{ course.title }}</li>
+      {% empty %}
+      <li>No courses enrolled.</li>
+      {% endfor %}
+    </ul>
 
-<ul>
-  <li>My courses</li>
-  <li>My assignments</li>
-  <li>My submissions</li>
-</ul>
-{% endblock %}
+    <h2>Your Assignments</h2>
+    <ul>
+      {% for assignment in assignments %}
+      <li>{{ assignment.title }} — due {{ assignment.due_date }}</li>
+      {% empty %}
+      <li>No assignments.</li>
+      {% endfor %}
+    </ul>
+
+    <a href="{% url 'logout' %}">Logout</a>
+  </body>
+</html>
