@@ -17,7 +17,8 @@ if env_path.exists():
 # ------------------------------------------------------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
 
-DEBUG = os.getenv("DEBUG", "True") == "True"
+# DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]  # restrict later in production
 

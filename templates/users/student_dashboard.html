@@ -1,29 +1,40 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Student Dashboard</title>
-  </head>
-  <body>
-    <h1>Welcome, {{ request.user.username }}</h1>
+{% extends "base.html" %} {% block content %}
 
-    <h2>Your Courses</h2>
-    <ul>
-      {% for course in courses %}
-      <li>{{ course.title }}</li>
-      {% empty %}
-      <li>No courses enrolled.</li>
-      {% endfor %}
-    </ul>
+<h1>Student Dashboard</h1>
 
-    <h2>Your Assignments</h2>
-    <ul>
-      {% for assignment in assignments %}
-      <li>{{ assignment.title }} — due {{ assignment.due_date }}</li>
-      {% empty %}
-      <li>No assignments.</li>
-      {% endfor %}
-    </ul>
+<p>Welcome, {{ request.user.username }}</p>
 
-    <a href="{% url 'logout' %}">Logout</a>
-  </body>
-</html>
+<hr />
+
+<h2>Your Courses</h2>
+
+{% if courses %}
+<ul>
+  {% for course in courses %}
+  <li>
+    <strong>{{ course.title }}</strong><br />
+    <small>{{ course.description }}</small>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No courses yet.</p>
+{% endif %}
+
+<hr />
+
+<h2>Your Assignments</h2>
+
+{% if assignments %}
+<ul>
+  {% for assignment in assignments %}
+  <li>
+    <strong>{{ assignment.title }}</strong><br />
+    <small>Course: {{ assignment.course.title }}</small><br />
+    <small>Due: {{ assignment.due_date }}</small>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No assignments yet 🎉</p>
+{% endif %} {% endblock %}
