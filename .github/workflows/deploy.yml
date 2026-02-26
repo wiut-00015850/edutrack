@@ -14,17 +14,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 🔧 FIX: create a dummy .env so docker-compose doesn't fail
+      - name: Create dummy .env for CI
+        run: |
+          echo "DB_NAME=test_db" >> .env
+          echo "DB_USER=test_user" >> .env
+          echo "DB_PASSWORD=test_password" >> .env
+          echo "DB_HOST=db" >> .env
+
       - name: Build containers
         run: docker compose build
 
       - name: Run tests (SQLite, CI mode)
         run: docker compose run --rm -e CI=true web python manage.py test
-
-env:
-  DEBUG: "False"
-  SECRET_KEY: dummy-secret
-  DB_NAME: edutrack
-  DB_USER: edutrack_user
-  DB_PASSWORD: password
-  DB_HOST: db
-  DB_PORT: 5432
