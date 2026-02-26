@@ -14,35 +14,20 @@ services:
   web:
     build: .
     container_name: edutrack_web
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
-    # env_file:
-    #   - .env
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - .env
     depends_on:
       - db
     volumes:
-      - static:/app/staticfiles
-      - media:/app/media
-    networks:
-      - edutrack_net
-
-  nginx:
-    image: nginx:alpine
-    container_name: edutrack_nginx
+      - .:/app # 🔥 HOT RELOAD (CRITICAL)
     ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - static:/static
-      - media:/media
-    depends_on:
-      - web
+      - "8000:8000"
     networks:
       - edutrack_net
 
 volumes:
   postgres_data:
-  static:
-  media:
 
 networks:
   edutrack_net:

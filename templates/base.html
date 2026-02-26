@@ -1,40 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}EduTrack{% endblock %}</title>
 
-    <style>
-      body {
-        font-family: system-ui, -apple-system, sans-serif;
-        background: #f5f7fa;
-        margin: 0;
-        padding: 0;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}EduTrack{% endblock %}</title>
 
-      .container {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 0 20px;
-      }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
 
-      h1,
-      h2 {
-        margin-bottom: 10px;
-      }
+    h1,
+    h2 {
+      margin-bottom: 10px;
+    }
 
-      .card {
-        background: white;
-        border-radius: 8px;
-        padding: 16px;
-        margin-bottom: 16px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-      }
-    </style>
+    .dashboard-section {
+      margin-bottom: 30px;
+    }
 
-    {% block extra_css %}{% endblock %}
-  </head>
-  <body>
-    <div class="container">{% block content %}{% endblock %}</div>
-  </body>
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .dashboard {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .dashboard-header {
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-header h1 {
+      margin-bottom: 0.3rem;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.2rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      margin-bottom: 0.8rem;
+    }
+
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .list li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .list li:last-child {
+      border-bottom: none;
+    }
+
+    .muted {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    .due-soon {
+      border-left: 4px solid #ff4d4f;
+      padding-left: 10px;
+    }
+
+    .assignment {
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-orange {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .badge-green {
+      background: #dcfce7;
+      color: #166534;
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+  {% if user.is_superuser %}
+  <a href="/admin/">Admin Panel</a>
+  {% else %}
+  <a href="{% url 'role_redirect' %}">Dashboard</a>
+  {% endif %}
+  <div class="container">{% block content %}{% endblock %}</div>
+</body>
+
 </html>

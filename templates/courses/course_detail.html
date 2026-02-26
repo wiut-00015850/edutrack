@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard">
+    <div class="card">
+        <h1>📘 {{ course.title }}</h1>
+
+        <p class="muted">
+            Instructor: {{ course.instructor.username }}
+        </p>
+
+        <hr />
+
+        <p>{{ course.description }}</p>
+    </div>
+
+    <br>
+
+    <div class="card">
+        <h2>📝 Assignments</h2>
+
+        {% if assignments %}
+        <ul class="list">
+            {% for assignment in assignments %}
+            <li>
+                <a href="{% url 'assignment_detail' assignment.id %}">
+                    <strong>{{ assignment.title }}</strong>
+                </a>
+                <small>
+                    Due {{ assignment.due_date|date:"M d, Y" }}
+                </small>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="muted">No assignments yet.</p>
+        {% endif %}
+    </div>
+    <br>
+    {% if user.profile.role == user.profile.Role.INSTRUCTOR %}
+    <a href="{% url 'create_assignment' course.id %}" class="btn">
+        ➕ Create Assignment
+    </a>
+    {% endif %}
+    <br>
+    <br>
+    <a href="{% url 'role_redirect' %}" class="btn">
+        ← Back to dashboard
+    </a>
+</div>
+
+{% endblock %}

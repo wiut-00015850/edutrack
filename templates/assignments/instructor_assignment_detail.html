@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard">
+    <h1>📝 {{ assignment.title }} — Instructor Panel</h1>
+    <p>Course: <strong>{{ assignment.course.title }}</strong></p>
+
+    <div class="card">
+        <h2>Submissions</h2>
+
+        {% if submissions %}
+        {% for submission in submissions %}
+        <div class="submission-card">
+
+            <p>
+                👤 <strong>{{ submission.student.username }}</strong><br>
+                📅 Submitted: {{ submission.submitted_at|date:"M d, Y H:i" }}
+            </p>
+
+            <p>
+                📎
+                <a href="{{ submission.file.url }}" target="_blank">
+                    Download file
+                </a>
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="submission_id" value="{{ submission.id }}">
+
+                <label>Grade:</label><br>
+                <input type="number" name="grade" value="{{ submission.grade }}" min="0" max="100"><br><br>
+
+                <label>Feedback:</label><br>
+                <textarea name="feedback" rows="3">{{ submission.feedback }}</textarea><br><br>
+
+                <button type="submit" class="btn">Save</button>
+            </form>
+
+            <hr>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No submissions yet.</p>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'course_detail' assignment.course.id %}">
+        ← Back to course
+    </a>
+</div>
+
+{% endblock %}

@@ -1,11 +1,31 @@
-{% extends "base.html" %} {% block content %}
-<h1>🧑‍🏫 Instructor Dashboard</h1>
+{% extends "base.html" %}
+{% block content %}
 
+<h1>👨‍🏫 Instructor Dashboard</h1>
 <p>Welcome, {{ user.username }} 👋</p>
 
-<ul>
-  <li>Create course</li>
-  <li>Manage students</li>
-  <li>Grade assignments</li>
-</ul>
+<div style="margin-bottom: 20px;">
+  <a href="{% url 'create_course' %}" class="btn btn-primary">
+    ➕ Create Course
+  </a>
+</div>
+
+<div class="card">
+  <h2>📚 My Courses</h2>
+
+  {% if courses %}
+  <ul>
+    {% for course in courses %}
+    <li>
+      <a href="{% url 'course_detail' course.id %}">
+        {{ course.title }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>You haven’t created any courses yet.</p>
+  {% endif %}
+</div>
+
 {% endblock %}

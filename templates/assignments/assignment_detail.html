@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard">
+    <div class="card">
+        <h1>📝 {{ assignment.title }}</h1>
+
+        <p class="muted">
+            Course: <strong>{{ assignment.course.title }}</strong>
+        </p>
+
+        <hr />
+
+        <p>{{ assignment.description }}</p>
+        <!--  -->
+        <hr />
+
+        {% if request.user.profile.role == "student" %}
+        <h3>📤 Your Submission</h3>
+
+        {% if submission %}
+        <div class="card">
+            <p><strong>Submitted on:</strong> {{ submission.submitted_at|date:"M d, Y H:i" }}</p>
+
+            {% if submission.file %}
+            <p>
+                <a href="{{ submission.file.url }}" target="_blank">
+                    📎 Download your file
+                </a>
+            </p>
+            {% endif %}
+
+            {% if submission.feedback %}
+            <p><strong>Instructor Feedback:</strong></p>
+            <p>{{ submission.feedback }}</p>
+            {% endif %}
+
+            {% if submission.grade %}
+            <p><strong>Grade:</strong> {{ submission.grade }}</p>
+            {% endif %}
+        </div>
+
+        {% else %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Assignment</button>
+        </form>
+        {% endif %}
+        {%endif%}
+        <!--  -->
+
+        <!--  -->
+
+        {% if user.profile.role == user.profile.Role.INSTRUCTOR %}
+        <a href="{% url 'instructor_assignment_detail' assignment.id %}">
+            🛠 Instructor Panel
+        </a>
+        {% endif %}
+    </div>
+
+
+    <a href="{% url 'role_redirect' %}" class="btn">
+        ← Back to dashboard
+    </a>
+</div>
+
+{% endblock %}

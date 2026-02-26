@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard">
+    <h1>➕ Create Assignment</h1>
+    <p>Course: <strong>{{ course.title }}</strong></p>
+
+    <div class="card">
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Title:</label><br>
+            {{ form.title }}<br><br>
+
+            <label>Description:</label><br>
+            {{ form.description }}<br><br>
+
+            <label>Due date:</label><br>
+            {{ form.due_date }}<br><br>
+
+            <button type="submit" class="btn">Create</button>
+        </form>
+    </div>
+
+    <a href="{% url 'course_detail' course.id %}">
+        ← Back to course
+    </a>
+</div>
+
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from assignments.models import User
 
 
 class Profile(models.Model):
@@ -8,8 +9,7 @@ class Profile(models.Model):
         INSTRUCTOR = "INSTRUCTOR", "Instructor"
 
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
+        User, on_delete=models.CASCADE
     )
 
     role = models.CharField(
