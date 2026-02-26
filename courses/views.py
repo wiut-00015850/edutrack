@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from courses.models import Course
+from courses.models import Course, Lesson
 from assignments.models import Assignment
 from users.decorators import instructor_required
 from users.models import Profile
-from .forms import CourseForm
+from .forms import CourseForm, LessonForm
 from users.decorators import student_required
 
 @login_required
@@ -88,3 +88,47 @@ def leave_course(request, course_id):
     course.students.remove(request.user)
 
     return redirect("student_dashboard")
+
+
+@login_required
+@instructor_required
+def create_lesson(request, course_id):
+    course = get_object_or_404(
+        Course,
+        id=course_id,
+        instructor=request.user
+    )
+
+    if request.method == "POST":
+        form = LessonForm(request.POST, request.FILES)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.course = course
+            lesson.save()
+            return redirect("course_detail", course_id=course.id)
+    else:
+        form = LessonForm()
+
+    return render(
+        request,
+        "courses/create_lesson.html",
+        {"form": form, "course": course},
+    )
+
+@login_required
+def lesson_detail(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+
+    if request.user.profile.role == "student":
+        if not lesson.course.students.filter(id=request.user.id).exists():
+            return HttpResponseForbidden()
+
+    return render(
+        request,
+        "courses/lesson_detail.html",
+        {"lesson": lesson},
+    )
+
+
+
+

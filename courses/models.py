@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.auth import get_user_model
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
@@ -18,3 +19,22 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+    
+User = get_user_model()
+
+class Lesson(models.Model):
+    course = models.ForeignKey(
+        "courses.Course",
+        on_delete=models.CASCADE,
+        related_name="lessons"
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    video = models.FileField(upload_to="lessons/videos/")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def str(self):
+        return f"{self.course.title} — {self.title}"
+    
+
+

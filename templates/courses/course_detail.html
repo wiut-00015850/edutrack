@@ -4,6 +4,32 @@
 <div class="dashboard">
     <div class="card">
         <h1>📘 {{ course.title }}</h1>
+        <hr />
+        <h2>📚 Lessons</h2>
+
+        {% if course.lessons.exists %}
+        <ul>
+            {% for lesson in course.lessons.all %}
+            <li>
+                <strong>{{ lesson.title }}</strong><br />
+                {{ lesson.description }}
+
+                <video width="640" controls>
+                    <source src="{{ lesson.video.url }}">
+                    Your browser does not support video.
+                </video>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No lessons yet.</p>
+        {% endif %}
+
+        {% if request.user == course.instructor %}
+        <a href="{% url 'create_lesson' course.id %}">
+            ➕ Add lesson
+        </a>
+        {% endif %}
 
         <p class="muted">
             Instructor: {{ course.instructor.username }}
