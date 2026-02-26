@@ -7,16 +7,6 @@ from dotenv import load_dotenv
 # ------------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CI = os.environ.get("CI") == "true"
-
-if CI:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
 # Load .env ONLY if it exists (important for CI)
 env_path = BASE_DIR / ".env"
 if env_path.exists():

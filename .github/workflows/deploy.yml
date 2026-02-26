@@ -19,3 +19,6 @@ jobs:
 
       - name: Run tests (SQLite, CI mode)
         run: docker compose run --rm -e CI=true web python manage.py test
+
+env:
+  CI: true
