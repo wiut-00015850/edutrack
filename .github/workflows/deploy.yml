@@ -21,4 +21,10 @@ jobs:
         run: docker compose run --rm -e CI=true web python manage.py test
 
 env:
-  CI: true
+  DEBUG: "False"
+  SECRET_KEY: dummy-secret
+  DB_NAME: edutrack
+  DB_USER: edutrack_user
+  DB_PASSWORD: password
+  DB_HOST: db
+  DB_PORT: 5432
