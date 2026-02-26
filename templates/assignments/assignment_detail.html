@@ -12,15 +12,18 @@
         <hr />
 
         <p>{{ assignment.description }}</p>
-        <!--  -->
+
         <hr />
 
-        {% if request.user.profile.role == "student" %}
+        {# ================= STUDENT VIEW ================= #}
+        {% if request.user.profile.role == request.user.profile.Role.STUDENT %}
         <h3>📤 Your Submission</h3>
 
         {% if submission %}
         <div class="card">
-            <p><strong>Submitted on:</strong> {{ submission.submitted_at|date:"M d, Y H:i" }}</p>
+            <p><strong>Submitted on:</strong>
+                {{ submission.submitted_at|date:"M d, Y H:i" }}
+            </p>
 
             {% if submission.file %}
             <p>
@@ -35,11 +38,10 @@
             <p>{{ submission.feedback }}</p>
             {% endif %}
 
-            {% if submission.grade %}
+            {% if submission.grade is not None %}
             <p><strong>Grade:</strong> {{ submission.grade }}</p>
             {% endif %}
         </div>
-
         {% else %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -47,18 +49,15 @@
             <button type="submit">Submit Assignment</button>
         </form>
         {% endif %}
-        {%endif%}
-        <!--  -->
+        {% endif %}
 
-        <!--  -->
-
-        {% if user.profile.role == user.profile.Role.INSTRUCTOR %}
+        {# ================= INSTRUCTOR VIEW ================= #}
+        {% if request.user.profile.role == request.user.profile.Role.INSTRUCTOR %}
         <a href="{% url 'instructor_assignment_detail' assignment.id %}">
             🛠 Instructor Panel
         </a>
         {% endif %}
     </div>
-
 
     <a href="{% url 'role_redirect' %}" class="btn">
         ← Back to dashboard

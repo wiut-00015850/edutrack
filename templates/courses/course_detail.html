@@ -35,6 +35,17 @@
         {% else %}
         <p class="muted">No assignments yet.</p>
         {% endif %}
+
+        <br>
+        {% if user.profile.role == user.profile.Role.STUDENT %}
+        <form method="post" action="{% url 'leave_course' course.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                🚪 Leave Course
+            </button>
+        </form>
+        {% endif %}
+
     </div>
     <br>
     {% if user.profile.role == user.profile.Role.INSTRUCTOR %}

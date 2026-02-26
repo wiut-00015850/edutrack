@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-
 from users.models import Profile
 from users.decorators import instructor_required
 from courses.models import Course
-from assignments.models import Assignment
+from assignments.models import Assignment, Submission
 
 
 @login_required
@@ -38,8 +37,10 @@ def student_dashboard(request):
     assignments = (
         Assignment.objects
         .filter(course__in=courses)
+        .exclude(submissions__student=request.user)
         .order_by("due_date")
     )
+    
 
     return render(
         request,
@@ -63,3 +64,4 @@ def instructor_dashboard(request):
             "courses": courses,
         }
     )
+

@@ -78,3 +78,13 @@ def enroll_course(request, course_id):
     course.students.add(request.user)
 
     return redirect("course_detail", course_id=course.id)
+
+
+@login_required
+@student_required
+def leave_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+
+    course.students.remove(request.user)
+
+    return redirect("student_dashboard")
