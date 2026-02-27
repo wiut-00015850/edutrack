@@ -1,28 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Available Courses</h2>
+<div class="dashboard">
 
-{% if courses %}
-<ul>
+    <!-- Header -->
+    <div class="card" style="position: relative;">
+        <a href="{% url 'student_dashboard' %}" class="btn btn-back" style="position:absolute; top:20px; right:20px;">
+            ← Back
+        </a>
+
+        <h1 style="margin-bottom: 0.5rem;">Available Courses</h1>
+        <p class="muted">
+            Explore courses and enroll to start learning.
+        </p>
+    </div>
+
+    <!-- Courses List -->
+    {% if courses %}
     {% for course in courses %}
-    <li>
-        <strong>{{ course.title }}</strong>
-        <br>
-        {{ course.description }}
-        <br>
+    <div class="card" style="margin-bottom: 1.5rem;">
 
-        <form method="post" action="{% url 'enroll_course' course.id %}">
-            {% csrf_token %}
-            <button type="submit">Enroll</button>
-        </form>
-    </li>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:20px;">
+
+            <div>
+                <div class="course-title">
+                    {{ course.title }}
+                </div>
+
+                <div class="course-desc" style="margin-top:6px;">
+                    {{ course.description }}
+                </div>
+
+                <p class="muted" style="margin-top:10px;">
+                    Instructor: {{ course.instructor.username }}
+                </p>
+            </div>
+
+            <form method="post" action="{% url 'enroll_course' course.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">
+                    Enroll
+                </button>
+            </form>
+
+        </div>
+
+    </div>
     {% endfor %}
-</ul>
-{% else %}
-<p>No available courses.</p>
-{% endif %}
+    {% else %}
+    <div class="card">
+        <p class="muted">No available courses at the moment.</p>
+    </div>
+    {% endif %}
 
-<a href="{% url 'student_dashboard' %}">← Back</a>
+</div>
 
 {% endblock %}

@@ -1,23 +1,32 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block content %}
 
 <div class="dashboard">
+
+  <!-- Header -->
   <header class="dashboard-header">
-    <h1>🎓 Student Dashboard</h1>
-    <p>Welcome back, <strong>{{ user.username }}</strong></p>
+    <h2>Student Dashboard</h2>
+    <p class="muted">
+      Welcome back, <strong>{{ user.username }}</strong>
+    </p>
   </header>
 
+  <!-- Main Grid -->
   <section class="dashboard-grid">
+
     <!-- Courses -->
     <div class="card">
-      <h2>📚 My Courses</h2>
+      <h2>My Courses</h2>
 
       {% if courses %}
       <ul class="list">
         {% for course in courses %}
-        <li>
-          <a href="{% url 'course_detail' course.id %}">
-            <strong>{{ course.title }}</strong> </a><br />
-          <small>{{ course.description }}</small>
+        <li class="course-item">
+          <a href="{% url 'course_detail' course.id %}" class="clickable-row">
+            <div class="course-title">{{ course.title }}</div>
+            <div class="course-desc">{{ course.description }}</div>
+          </a>
         </li>
         {% endfor %}
       </ul>
@@ -25,41 +34,48 @@
       <p class="muted">You are not enrolled in any courses yet.</p>
       {% endif %}
 
-      <a href="{% url 'available_courses' %}">+ Enroll in a course</a>
+      <!-- Enroll CTA -->
+      <a href="{% url 'available_courses' %}" class="clickable-row">
+        <div class="course-title">+ Enroll in a course</div>
+        <div class="course-desc">Browse available courses</div>
+      </a>
     </div>
 
     <!-- Assignments -->
     <div class="card">
-      <h2>📝 Upcoming Assignments</h2>
+      <h2>Upcoming Assignments</h2>
 
       {% if assignments %}
       <ul class="list">
         {% for assignment in assignments %}
-        <li class="assignment {{ assignment.status }}">
-          <a href="{% url 'assignment_detail' assignment.id %}" class="assignment-link">
-            <strong>{{ assignment.title }}</strong>
-          </a><br />
+        <li>
+          <a href="{% url 'assignment_detail' assignment.id %}" class="clickable-row assignment-row">
 
-          <small>
-            {{ assignment.course.title }} —
-            due {{ assignment.due_date|date:"M d, Y" }}
-          </small>
+            <div class="assignment-title">
+              {{ assignment.title }}
 
-          {% if assignment.is_overdue %}
-          <span class="badge badge-red">Overdue</span>
-          {% elif assignment.is_due_soon %}
-          <span class="badge badge-orange">Due soon</span>
-          {% else %}
-          <span class="badge badge-green">Upcoming</span>
-          {% endif %}
+              {% if assignment.is_overdue %}
+              <span class="badge badge-red">Overdue</span>
+              {% elif assignment.is_due_soon %}
+              <span class="badge badge-orange">Due soon</span>
+              {% else %}
+              <span class="badge badge-green">Upcoming</span>
+              {% endif %}
+            </div>
+
+            <div class="assignment-meta">
+              {{ assignment.course.title }} —
+              due {{ assignment.due_date|date:"M d, Y" }}
+            </div>
+
+          </a>
         </li>
         {% endfor %}
       </ul>
       {% else %}
-      <p class="muted">No assignments yet 🎉</p>
+      <p class="muted">No assignments right now</p>
       {% endif %}
     </div>
-
 
   </section>
 </div>

@@ -1,31 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>👨‍🏫 Instructor Dashboard</h1>
-<p>Welcome, {{ user.username }} 👋</p>
+<!-- Header -->
 
-<div style="margin-bottom: 20px;">
-  <a href="{% url 'create_course' %}" class="btn btn-primary">
-    ➕ Create Course
-  </a>
-</div>
+<h2 style="margin-bottom: 0.4rem;">
+  Instructor Dashboard
+</h2>
 
+<p class="muted">
+  Welcome back, {{ user.username }}
+</p>
+
+
+
+<!-- My Courses -->
 <div class="card">
-  <h2>📚 My Courses</h2>
+  <h2>My Courses</h2>
 
-  {% if courses %}
-  <ul>
+  <ul class="list">
+
     {% for course in courses %}
     <li>
-      <a href="{% url 'course_detail' course.id %}">
-        {{ course.title }}
+      <a href="{% url 'course_detail' course.id %}" class="clickable-row course-block">
+
+        <div class="course-title">
+          {{ course.title }}
+        </div>
+
+        <div class="course-desc">
+          Manage lessons and assignments
+        </div>
+
       </a>
     </li>
+    {% empty %}
+    <li>
+      <p class="muted" style="padding: 1rem 0.75rem;">
+        You haven’t created any courses yet.
+      </p>
+    </li>
     {% endfor %}
+
+    <!-- Create course as last item -->
+    <li>
+      <a href="{% url 'create_course' %}" class="clickable-row course-block"
+        style="border-top: 1px dashed var(--border);">
+
+        <div class="course-title" style="color: var(--primary);">
+          + Create new course
+        </div>
+
+        <div class="course-desc">
+          Add lessons and assignments
+        </div>
+
+      </a>
+    </li>
+
   </ul>
-  {% else %}
-  <p>You haven’t created any courses yet.</p>
-  {% endif %}
+</div>
+
 </div>
 
 {% endblock %}

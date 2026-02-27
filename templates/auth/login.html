@@ -3,15 +3,37 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h1>Login</h1>
 
-{% if form.errors %}
-<p style="color:red;">Invalid username or password</p>
-{% endif %}
+<div class="auth-wrapper">
+    <div class="auth-card">
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+        <h1 class="auth-title">Login</h1>
+
+        {% if form.errors %}
+        <div class="auth-error">
+            Invalid username or password
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="btn auth-btn">
+                Sign in
+            </button>
+        </form>
+
+    </div>
+</div>
+
 {% endblock %}

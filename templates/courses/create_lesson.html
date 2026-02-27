@@ -1,16 +1,72 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>🎥 Add Lesson to {{ course.title }}</h1>
+<div class="dashboard">
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload Lesson</button>
-</form>
+    <div class="card form-card" style="position: relative; max-width: 700px; margin: 0 auto;">
 
-<a href="{% url 'course_detail' course.id %}">
-    ← Back to course
-</a>
+        <!-- Back -->
+        <a href="javascript:history.back()" class="btn btn-back" style="position:absolute; top:20px; right:20px;">
+            ← Back
+        </a>
+
+        <h1 style="margin-bottom: 0.3rem;">
+            Add Lesson
+        </h1>
+
+        <p class="muted" style="margin-bottom: 2rem;">
+            Course: {{ course.title }}
+        </p>
+
+        <form method="post" enctype="multipart/form-data" class="form-layout">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">
+                    Lesson title
+                </label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <div class="error">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="error">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.video.id_for_label }}">
+                    Video file
+                </label>
+                {{ form.video }}
+                {% if form.video.errors %}
+                <div class="error">{{ form.video.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div style="margin-top: 2rem; display:flex; gap:12px;">
+                <button type="submit" class="btn">
+                    Upload lesson
+                </button>
+
+                <a href="{% url 'course_detail' course.id %}" class="btn"
+                    style="background: transparent; border: 1px solid var(--border);">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

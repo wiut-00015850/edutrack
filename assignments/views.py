@@ -5,8 +5,11 @@ from assignments.models import Assignment, Submission
 from assignments.forms import SubmissionForm
 from users.models import Profile
 from courses.models import Course
+from .models import Assignment
 from .forms import AssignmentForm
-
+from datetime import time
+from django.utils.timezone import make_aware
+from django.utils import timezone
 
 @login_required
 def assignment_detail(request, assignment_id):
@@ -82,21 +85,26 @@ def instructor_assignment_detail(request, assignment_id):
         },
     )
 
-@login_required
+login_required
 @instructor_required
 def create_assignment(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-
-    # Instructor can only create assignments for their own course
-    if course.instructor != request.user:
-        return render(request, "403.html", status=403)
+    course = get_object_or_404(Course, id=course_id, instructor=request.user)
 
     if request.method == "POST":
         form = AssignmentForm(request.POST)
+
         if form.is_valid():
             assignment = form.save(commit=False)
+
+            # 🔒 Force due time to 23:59
+            selected_date = form.cleaned_data["due_date"]
+            assignment.due_date = make_aware(
+                timezone.datetime.combine(selected_date, time(23, 59))
+            )
+
             assignment.course = course
             assignment.save()
+
             return redirect("course_detail", course_id=course.id)
     else:
         form = AssignmentForm()

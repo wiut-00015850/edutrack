@@ -2,52 +2,83 @@
 {% block content %}
 
 <div class="dashboard">
-    <h1>📝 {{ assignment.title }} — Instructor Panel</h1>
-    <p>Course: <strong>{{ assignment.course.title }}</strong></p>
 
+    <!-- Header -->
+    <div class="card" style="position: relative;">
+
+        <a href="javascript:history.back()" class="btn btn-back" style="position:absolute; top:20px; right:20px;">
+            ← Back
+        </a>
+
+        <h1 style="margin-bottom: 0.3rem;">
+            {{ assignment.title }}
+        </h1>
+
+        <p class="muted">
+            Course: {{ assignment.course.title }}
+        </p>
+
+    </div>
+
+    <!-- Submissions -->
     <div class="card">
         <h2>Submissions</h2>
 
         {% if submissions %}
+
         {% for submission in submissions %}
-        <div class="submission-card">
+        <div class="submission-block">
 
-            <p>
-                👤 <strong>{{ submission.student.username }}</strong><br>
-                📅 Submitted: {{ submission.submitted_at|date:"M d, Y H:i" }}
-            </p>
+            <!-- Student Info -->
+            <div class="submission-header">
+                <div>
+                    <strong>{{ submission.student.username }}</strong>
+                    <div class="muted">
+                        Submitted {{ submission.submitted_at|date:"M d, Y H:i" }}
+                    </div>
+                </div>
 
-            <p>
-                📎
-                <a href="{{ submission.file.url }}" target="_blank">
-                    Download file
+                <a href="{{ submission.file.url }}" target="_blank" class="btn"
+                    style="background: transparent; border: 1px solid var(--border);">
+                    Download
                 </a>
-            </p>
+            </div>
 
-            <form method="POST">
+            <!-- Grading Form -->
+            <form method="POST" class="form-layout" style="margin-top: 1.5rem;">
                 {% csrf_token %}
                 <input type="hidden" name="submission_id" value="{{ submission.id }}">
 
-                <label>Grade:</label><br>
-                <input type="number" name="grade" value="{{ submission.grade }}" min="0" max="100"><br><br>
+                <div class="form-group">
+                    <label>Grade</label>
+                    <input type="number" name="grade" value="{{ submission.grade }}" min="0" max="100"
+                        style="width: 70px;">
+                </div>
 
-                <label>Feedback:</label><br>
-                <textarea name="feedback" rows="3">{{ submission.feedback }}</textarea><br><br>
+                <div class="form-group">
+                    <label>Feedback</label>
+                    <textarea name="feedback" rows="3">{{ submission.feedback }}</textarea>
+                </div>
 
-                <button type="submit" class="btn">Save</button>
+                <div>
+                    <button type="submit" class="btn">
+                        Save
+                    </button>
+                </div>
+
             </form>
 
-            <hr>
         </div>
         {% endfor %}
+
         {% else %}
-        <p>No submissions yet.</p>
+        <p class="muted">
+            No submissions yet.
+        </p>
         {% endif %}
+
     </div>
 
-    <a href="{% url 'course_detail' assignment.course.id %}">
-        ← Back to course
-    </a>
 </div>
 
 {% endblock %}

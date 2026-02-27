@@ -2,29 +2,60 @@
 {% block content %}
 
 <div class="dashboard">
-    <h1>➕ Create Assignment</h1>
-    <p>Course: <strong>{{ course.title }}</strong></p>
 
-    <div class="card">
+    <!-- Header -->
+    <div class="card" style="position: relative; max-width: 700px; margin: 0 auto;">
+
+        <a href="javascript:history.back()" class="btn btn-back" style="position:absolute; top:20px; right:20px;">
+            ← Back
+        </a>
+
+        <h1 style="margin-bottom: 0.3rem;">
+            Create Assignment
+        </h1>
+
+        <p class="muted">
+            Course: {{ course.title }}
+        </p>
+
+
         <form method="POST">
+
             {% csrf_token %}
 
-            <label>Title:</label><br>
-            {{ form.title }}<br><br>
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <div class="error">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
 
-            <label>Description:</label><br>
-            {{ form.description }}<br><br>
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="error">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
 
-            <label>Due date:</label><br>
-            {{ form.due_date }}<br><br>
+            <div class="form-group">
+                <label for="{{ form.due_date.id_for_label }}">Due date</label>
+                {{ form.due_date }}
+                {% if form.due_date.errors %}
+                <div class="error">{{ form.due_date.errors }}</div>
+                {% endif %}
+            </div>
 
-            <button type="submit" class="btn">Create</button>
+            <div style="margin-top: 1.5rem;">
+                <button type="submit" class="btn">
+                    Create assignment
+                </button>
+            </div>
+
         </form>
     </div>
 
-    <a href="{% url 'course_detail' course.id %}">
-        ← Back to course
-    </a>
 </div>
 
 {% endblock %}

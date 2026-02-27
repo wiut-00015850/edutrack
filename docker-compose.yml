@@ -20,7 +20,8 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app # 🔥 HOT RELOAD (CRITICAL)
+      # - ./media:/app/media
+      - .:/app # hot reload 
     ports:
       - "8000:8000"
     networks:

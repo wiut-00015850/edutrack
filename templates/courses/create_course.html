@@ -2,41 +2,64 @@
 {% block content %}
 
 <div class="dashboard">
-    <header class="dashboard-header">
-        <h1>➕ Create Course</h1>
-        <p>Set up a new course for your students</p>
-    </header>
 
-    <section class="card" style="max-width: 600px;">
-        <form method="post">
+    <div class="card form-card" style="position: relative; max-width: 600px; margin: 0 auto;">
+
+        <!-- Back button -->
+        <a href="javascript:history.back()" class="btn btn-back" style="position:absolute; top:20px; right:20px;">
+            ← Back
+        </a>
+
+        <h1 style="margin-bottom: 0.3rem;">
+            Create Course
+        </h1>
+
+        <p class="muted" style="margin-bottom: 2rem;">
+            Set up a new course for your students
+        </p>
+
+        <form method="post" class="form-layout">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="{{ form.title.id_for_label }}">Course title</label>
+                <label for="{{ form.title.id_for_label }}">
+                    Course title
+                </label>
                 {{ form.title }}
                 {% if form.title.errors %}
-                <div class="error">{{ form.title.errors }}</div>
+                <div class="error">
+                    {{ form.title.errors }}
+                </div>
                 {% endif %}
             </div>
 
             <div class="form-group">
-                <label for="{{ form.description.id_for_label }}">Description</label>
+                <label for="{{ form.description.id_for_label }}">
+                    Description
+                </label>
                 {{ form.description }}
                 {% if form.description.errors %}
-                <div class="error">{{ form.description.errors }}</div>
+                <div class="error">
+                    {{ form.description.errors }}
+                </div>
                 {% endif %}
             </div>
 
-            <div style="margin-top: 1rem;">
-                <button type="submit" class="btn btn-primary">
+            <div style="margin-top: 2rem; display:flex; gap:12px;">
+                <button type="submit" class="btn">
                     Create course
                 </button>
-                <a href="{% url 'instructor_dashboard' %}" class="btn btn-secondary">
+
+                <a href="{% url 'instructor_dashboard' %}" class="btn"
+                    style="background: transparent; border: 1px solid var(--border);">
                     Cancel
                 </a>
             </div>
+
         </form>
-    </section>
+
+    </div>
+
 </div>
 
 {% endblock %}

@@ -1,60 +1,84 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script>
+    function openLeaveModal() {
+        document.getElementById("leaveModal").style.display = "flex";
+    }
+
+    function closeLeaveModal() {
+        document.getElementById("leaveModal").style.display = "none";
+    }
+</script>
+
 <div class="dashboard">
-    <div class="card">
-        <h1>📘 {{ course.title }}</h1>
-        <hr />
-        <h2>📚 Lessons</h2>
 
-        {% if course.lessons.exists %}
-        <ul>
-            {% for lesson in course.lessons.all %}
-            <li>
-                <strong>{{ lesson.title }}</strong><br />
-                {{ lesson.description }}
+    <!-- COURSE HEADER -->
+    <div class="card course-header">
 
-                <video width="640" controls>
-                    <source src="{{ lesson.video.url }}">
-                    Your browser does not support video.
-                </video>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No lessons yet.</p>
-        {% endif %}
+        <div class="course-header-top">
+            <h1>{{ course.title }}</h1>
 
-        {% if request.user == course.instructor %}
-        <a href="{% url 'create_lesson' course.id %}">
-            ➕ Add lesson
-        </a>
-        {% endif %}
+            <a href="{% url 'role_redirect' %}" class="btn btn-back">
+                ← Back
+            </a>
+        </div>
 
         <p class="muted">
             Instructor: {{ course.instructor.username }}
         </p>
 
-        <hr />
+        <p class="course-description">
+            {{ course.description }}
+        </p>
 
-        <p>{{ course.description }}</p>
     </div>
 
-    <br>
-
+    <!-- LESSONS -->
     <div class="card">
-        <h2>📝 Assignments</h2>
+        <h2>Lessons</h2>
+
+        {% if course.lessons.exists %}
+        <ul class="list">
+            {% for lesson in course.lessons.all %}
+            <li class="course-block">
+                <div class="course-title">{{ lesson.title }}</div>
+                <div class="course-desc">{{ lesson.description }}</div>
+
+                {% if lesson.video %}
+                <video controls>
+                    <source src="{{ lesson.video.url }}">
+                    Your browser does not support the video tag.
+                </video>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="muted">No lessons yet.</p>
+        {% endif %}
+
+        {% if request.user == course.instructor %}
+        <a href="{% url 'create_lesson' course.id %}" class="btn" style="margin-top: 1rem;">
+            + Add lesson
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- ASSIGNMENTS -->
+    <div class="card">
+        <h2>Assignments</h2>
 
         {% if assignments %}
         <ul class="list">
             {% for assignment in assignments %}
-            <li>
-                <a href="{% url 'assignment_detail' assignment.id %}">
-                    <strong>{{ assignment.title }}</strong>
+            <li class="course-block">
+                <a href="{% url 'assignment_detail' assignment.id %}" class="assignment-link clickable-row">
+                    <div class="course-title">{{ assignment.title }}</div>
+                    <div class="course-desc">
+                        Due {{ assignment.due_date|date:"M d, Y" }}, 23:59
+                    </div>
                 </a>
-                <small>
-                    Due {{ assignment.due_date|date:"M d, Y" }}
-                </small>
             </li>
             {% endfor %}
         </ul>
@@ -62,28 +86,46 @@
         <p class="muted">No assignments yet.</p>
         {% endif %}
 
-        <br>
-        {% if user.profile.role == user.profile.Role.STUDENT %}
-        <form method="post" action="{% url 'leave_course' course.id %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">
-                🚪 Leave Course
-            </button>
-        </form>
+        {% if user.profile.role == user.profile.Role.INSTRUCTOR %}
+        <a href="{% url 'create_assignment' course.id %}" class="btn" style="margin-top: 1rem;">
+            Create assignment
+        </a>
         {% endif %}
-
     </div>
-    <br>
-    {% if user.profile.role == user.profile.Role.INSTRUCTOR %}
-    <a href="{% url 'create_assignment' course.id %}" class="btn">
-        ➕ Create Assignment
-    </a>
-    {% endif %}
-    <br>
-    <br>
-    <a href="{% url 'role_redirect' %}" class="btn">
-        ← Back to dashboard
-    </a>
-</div>
 
+    <!-- STUDENT ACTIONS -->
+    {% if user.profile.role == user.profile.Role.STUDENT %}
+    <div class="card">
+        {% if user.profile.role == user.profile.Role.STUDENT %}
+        <button class="btn btn-danger" onclick="openLeaveModal()">
+            Leave Course
+        </button>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- modal -->
+
+    <div id="leaveModal" class="modal-overlay">
+        <div class="modal">
+            <h3>Leave course?</h3>
+            <p class="muted">
+                You will lose access to all lessons and assignments for this course
+            </p>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeLeaveModal()">
+                    Cancel
+                </button>
+
+                <form method="post" action="{% url 'leave_course' course.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        Leave course
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

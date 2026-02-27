@@ -2,8 +2,18 @@
 {% block content %}
 
 <div class="dashboard">
-    <div class="card">
-        <h1>📝 {{ assignment.title }}</h1>
+
+    <!-- Header -->
+    <div class="card" style="position: relative;">
+
+        <!-- Back button (top-right) -->
+        <button class="btn btn-back" onclick="history.back()" style="position:absolute; top:20px; right:20px;">
+            ← Back
+        </button>
+
+        <h1 style="margin-bottom: 0.4rem;">
+            {{ assignment.title }}
+        </h1>
 
         <p class="muted">
             Course: <strong>{{ assignment.course.title }}</strong>
@@ -12,56 +22,66 @@
         <hr />
 
         <p>{{ assignment.description }}</p>
+    </div>
 
-        <hr />
+    <!-- ================= STUDENT VIEW ================= -->
+    {% if request.user.profile.role == request.user.profile.Role.STUDENT %}
+    <div class="card">
 
-        {# ================= STUDENT VIEW ================= #}
-        {% if request.user.profile.role == request.user.profile.Role.STUDENT %}
-        <h3>📤 Your Submission</h3>
+        <h2>Your Submission</h2>
 
         {% if submission %}
-        <div class="card">
-            <p><strong>Submitted on:</strong>
-                {{ submission.submitted_at|date:"M d, Y H:i" }}
+        <div class="assignment-block">
+
+            <p class="muted">
+                Submitted on {{ submission.submitted_at|date:"M d, Y · H:i" }}
             </p>
 
             {% if submission.file %}
             <p>
-                <a href="{{ submission.file.url }}" target="_blank">
-                    📎 Download your file
+                <a href="{{ submission.file.url }}" class="assignment-link">
+                    Download submitted file
                 </a>
             </p>
             {% endif %}
 
             {% if submission.feedback %}
-            <p><strong>Instructor Feedback:</strong></p>
+            <hr />
+            <p><strong>Instructor feedback</strong></p>
             <p>{{ submission.feedback }}</p>
             {% endif %}
 
             {% if submission.grade is not None %}
-            <p><strong>Grade:</strong> {{ submission.grade }}</p>
+            <p>
+                <strong>Grade:</strong>
+                <span class="badge badge-green">{{ submission.grade }}</span>
+            </p>
             {% endif %}
         </div>
+
         {% else %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Submit Assignment</button>
+            <br>
+
+            <button type="submit">
+                Submit assignment
+            </button>
         </form>
         {% endif %}
-        {% endif %}
-
-        {# ================= INSTRUCTOR VIEW ================= #}
-        {% if request.user.profile.role == request.user.profile.Role.INSTRUCTOR %}
-        <a href="{% url 'instructor_assignment_detail' assignment.id %}">
-            🛠 Instructor Panel
-        </a>
-        {% endif %}
     </div>
+    {% endif %}
 
-    <a href="{% url 'role_redirect' %}" class="btn">
-        ← Back to dashboard
-    </a>
+    <!-- ================= INSTRUCTOR VIEW ================= -->
+    {% if request.user.profile.role == request.user.profile.Role.INSTRUCTOR %}
+    <div class="card">
+        <a href="{% url 'instructor_assignment_detail' assignment.id %}" class="btn">
+            Open instructor panel
+        </a>
+    </div>
+    {% endif %}
+
 </div>
 
 {% endblock %}
