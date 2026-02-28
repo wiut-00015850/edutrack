@@ -22,7 +22,7 @@ urlpatterns = [
     path("assignments/", include("assignments.urls")),
 ]
 
-# ✅ SERVE MEDIA FILES IN DEVELOPMENT ONLY
+# development only
 # if settings.DEBUG:
 #     urlpatterns += static(
 #         settings.MEDIA_URL,

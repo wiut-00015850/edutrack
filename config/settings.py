@@ -2,9 +2,9 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# ------------------------------------------------------------------------------
+
 # Base
-# ------------------------------------------------------------------------------
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env ONLY if it exists (important for CI)
@@ -12,19 +12,16 @@ env_path = BASE_DIR / ".env"
 if env_path.exists():
     load_dotenv(env_path)
 
-# ------------------------------------------------------------------------------
 # Core settings
-# ------------------------------------------------------------------------------
+
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
 
-# DEBUG = os.getenv("DEBUG", "True") == "True"
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["*"]  # restrict later in production
 
-# ------------------------------------------------------------------------------
 # Applications
-# ------------------------------------------------------------------------------
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -39,11 +36,11 @@ INSTALLED_APPS = [
     "assignments",
 ]
 
-# ------------------------------------------------------------------------------
 # Middleware
-# ------------------------------------------------------------------------------
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -52,9 +49,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# ------------------------------------------------------------------------------
+
 # URLs / Templates
-# ------------------------------------------------------------------------------
+
 ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
@@ -75,9 +72,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# ------------------------------------------------------------------------------
+
 # Database (default: PostgreSQL)
-# ------------------------------------------------------------------------------
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -89,9 +86,9 @@ DATABASES = {
     }
 }
 
-# ------------------------------------------------------------------------------
+
 # CI OVERRIDE (SQLite)
-# ------------------------------------------------------------------------------
+
 if os.getenv("CI", "").lower() == "true":
     DATABASES = {
         "default": {
@@ -100,9 +97,9 @@ if os.getenv("CI", "").lower() == "true":
         }
     }
 
-# ------------------------------------------------------------------------------
+
 # Auth / Passwords
-# ------------------------------------------------------------------------------
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -110,27 +107,28 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ------------------------------------------------------------------------------
+
 # Internationalization
-# ------------------------------------------------------------------------------
+
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ------------------------------------------------------------------------------
+
 # Static & Media
-# ------------------------------------------------------------------------------
+
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = "/app/staticfiles/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_STORAGE = "whitenoise.storage.CompressManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# ------------------------------------------------------------------------------
+
 # Security
-# ------------------------------------------------------------------------------
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_COOKIE_SECURE = not DEBUG
@@ -142,9 +140,10 @@ X_FRAME_OPTIONS = "DENY"
 # Behind nginx later
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# ------------------------------------------------------------------------------
+
 # Auth redirects
-# ------------------------------------------------------------------------------
+
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/users/redirect/"
 LOGOUT_REDIRECT_URL = "/login/"
+

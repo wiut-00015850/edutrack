@@ -20,9 +20,10 @@ services:
       - .env
     depends_on:
       - db
-    volumes:
-      # - ./media:/app/media
-      - .:/app # hot reload 
+    # for development only:
+    # volumes: 
+    #   # - ./media:/app/media
+    #   - .:/app # hot reload 
     ports:
       - "8000:8000"
     networks:

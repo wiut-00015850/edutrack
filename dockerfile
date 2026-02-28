@@ -1,4 +1,4 @@
-# ---------- Stage 1: build ----------
+# ---------- Stage 1: builder ----------
     FROM python:3.13-slim AS builder
 
     WORKDIR /build
@@ -12,9 +12,8 @@
         && rm -rf /var/lib/apt/lists/*
     
     COPY requirements.txt .
-    
     RUN pip install --upgrade pip \
-        && pip wheel --no-cache-dir --no-deps -r requirements.txt
+        && pip wheel --no-cache-dir -r requirements.txt
     
     
     # ---------- Stage 2: runtime ----------
@@ -25,27 +24,22 @@
     ENV PYTHONDONTWRITEBYTECODE=1
     ENV PYTHONUNBUFFERED=1
     
-    # Only runtime dependency
     RUN apt-get update && apt-get install -y \
         libpq5 \
         && rm -rf /var/lib/apt/lists/*
     
-    # Create non-root user
     RUN addgroup --system app && adduser --system --ingroup app app
     
-    # Copy wheels only
     COPY --from=builder /build/*.whl /wheels/
+    RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
     
-    # Install dependencies from wheels
-    RUN pip install --no-cache-dir /wheels/* \
-        && rm -rf /wheels
-    
-    # Copy project source
     COPY . .
     
-    # Create runtime dirs
-    RUN mkdir -p /app/staticfiles /app/media \
-        && chown -R app:app /app
+    RUN mkdir -p /app/staticfiles /app/media
+    
+    RUN python manage.py collectstatic --noinput
+    
+    RUN chown -R app:app /app
     
     USER app
     
