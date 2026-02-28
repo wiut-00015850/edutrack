@@ -18,7 +18,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["*"]  # restrict later in production
+# ALLOWED_HOSTS = ["*"]  # restrict later in production
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Applications
 
@@ -124,7 +125,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = "app/media"
 
 
 # Security
@@ -147,3 +148,24 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/users/redirect/"
 LOGOUT_REDIRECT_URL = "/login/"
 
+
+# Security Hardening
+
+# Prevent MIME sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# XSS filter
+SECURE_BROWSER_XSS_FILTER = True  
+
+# Clickjacking protection
+X_FRAME_OPTIONS = "DENY"
+
+# Referrer policy
+SECURE_REFERRER_POLICY = "same-origin"
+
+# Cookies (False for localhost HTTP)
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+
+# If behind reverse proxy (nginx)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

@@ -4,9 +4,11 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import health_check
+from django.views.generic import RedirectView
 
 urlpatterns = [
     # PUBLIC
+    path("", RedirectView.as_view(url="/login/")),
     path(
         "login/",
         auth_views.LoginView.as_view(template_name="auth/login.html"),
