@@ -3,11 +3,12 @@ import os
 from dotenv import load_dotenv
 
 
-# Base
+# Base directory
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Load .env ONLY if it exists (important for CI)
+# Load environment variables (.env optional)
+
 env_path = BASE_DIR / ".env"
 if env_path.exists():
     load_dotenv(env_path)
@@ -16,10 +17,11 @@ if env_path.exists():
 
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+# DEBUG is defined in dev.py or prod.py
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-# ALLOWED_HOSTS = ["*"]  # restrict later in production
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+
 
 # Applications
 
@@ -31,11 +33,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # local apps
+    # Local apps
     "users.apps.UsersConfig",
     "courses",
     "assignments",
 ]
+
 
 # Middleware
 
@@ -74,7 +77,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
-# Database (default: PostgreSQL)
+# Database (PostgreSQL default)
 
 DATABASES = {
     "default": {
@@ -87,9 +90,7 @@ DATABASES = {
     }
 }
 
-
-# CI OVERRIDE (SQLite)
-
+# CI override (SQLite)
 if os.getenv("CI", "").lower() == "true":
     DATABASES = {
         "default": {
@@ -99,7 +100,7 @@ if os.getenv("CI", "").lower() == "true":
     }
 
 
-# Auth / Passwords
+# Auth / Password Validation
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -125,47 +126,30 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "app/media"
+MEDIA_ROOT = "/app/media/"
 
 
-# Security
+# Default Primary Key
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-SECURE_BROWSER_XSS_FILTER = True
+
+# Security (base defaults - production overrides in prod.py)
+
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = "DENY"
+SECURE_REFERRER_POLICY = "same-origin"
 
-# Behind nginx later
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = ["http://localhost"]
 
-
-# Auth redirects
+# Authentication Redirects
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/users/redirect/"
 LOGOUT_REDIRECT_URL = "/login/"
 
-
-# Security Hardening
-
-# Prevent MIME sniffing
-SECURE_CONTENT_TYPE_NOSNIFF = True
-
-# XSS filter
-SECURE_BROWSER_XSS_FILTER = True  
-
-# Clickjacking protection
-X_FRAME_OPTIONS = "DENY"
-
-# Referrer policy
-SECURE_REFERRER_POLICY = "same-origin"
-
-# Cookies (False for localhost HTTP)
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
-
-# If behind reverse proxy (nginx)
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
