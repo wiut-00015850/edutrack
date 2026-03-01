@@ -153,3 +153,7 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/users/redirect/"
 LOGOUT_REDIRECT_URL = "/login/"
 
+# 
+
+APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import health_check
 from django.views.generic import RedirectView
+from users.views import version_view
 
 urlpatterns = [
     # PUBLIC
@@ -16,6 +17,7 @@ urlpatterns = [
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("health/", health_check, name="health"),
+    path("version/", version_view, name="version"),
 
     # APPS
     path("admin/", admin.site.urls),
