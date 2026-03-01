@@ -1,8 +1,13 @@
 from .base import *
+import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS", "").split(",")
+    if host.strip()
+]
 
 SECURE_SSL_REDIRECT = False  # turn True when HTTPS enabled
 SESSION_COOKIE_SECURE = True

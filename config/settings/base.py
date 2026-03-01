@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
 # DEBUG is defined in dev.py or prod.py
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Applications
@@ -144,8 +144,14 @@ SECURE_REFERRER_POLICY = "same-origin"
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_TRUSTED_ORIGINS = ["http://localhost"]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
+CSRF_TRUSTED_ORIGINS = (os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if
+os.getenv("CSRF_TRUSTED_ORIGINS")
+    else []
+)
+
+USE_X_FORWARDED_HOST = True
 
 # Authentication Redirects
 
