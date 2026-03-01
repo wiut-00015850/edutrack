@@ -102,7 +102,7 @@ Security hardening
 Health monitoring endpoint
 Git history preservation
 Branch and pull request workflow
-Cloud VM deployment (Azure)
+Cloud VM deployment (GCP)
 SSH access configuration
 
 NOTES
@@ -114,3 +114,56 @@ The system is designed to be portable and reproducible across environments.
 LICENSE
 
 Educational use only.
+
+PRODUCTION DEVELOPMENT (GCP)
+
+EduTrack is deployed in a production environment on Google Cloud Platform (Compute Engine) using Docker.
+Infrastructure
+Google Compute Engine VM
+Ubuntu 22.04 LTS
+Docker & Docker Compose
+Public IPv4 address
+Firewall rule allowing TCP port 80
+Deployment Stack
+Nginx – reverse proxy (port 80)
+Gunicorn – WSGI application server
+Django – backend application
+PostgreSQL – database (Docker volume)
+Docker volumes – persistent static, media, and database data
+Deployment Flow
+Client
+→ Nginx (port 80)
+→ Gunicorn
+→ Django
+→ PostgreSQL
+Environment Configuration
+Production secrets and configuration are stored in a .env file on the VM only and are not committed to GitHub.
+Key variables:
+SECRET_KEY
+DEBUG=False
+ALLOWED_HOSTS=<VM_EXTERNAL_IP>,localhost,127.0.0.1
+Database credentials
+Production Startup
+On the VM:
+Bash
+Copy code
+docker compose up -d --build
+This command:
+Builds production images
+Runs database migrations
+Collects static files
+Starts Nginx, Gunicorn, and PostgreSQL containers
+Access
+The application is accessible via the VM’s external IP address over HTTP:
+Copy code
+
+http://34.42.159.210/
+Security
+Django DEBUG disabled
+ALLOWED_HOSTS enforced
+Non-root Docker user
+Nginx reverse proxy
+Static and media files served by Nginx
+Secrets isolated in .env on VM
+Status
+Production deployment verified and running successfully on GCP.
