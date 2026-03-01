@@ -5,7 +5,8 @@ from users.models import Profile
 from users.decorators import instructor_required
 from courses.models import Course
 from assignments.models import Assignment, Submission
-
+from django.http import JsonResponse
+from django.conf import settings
 
 @login_required
 def role_redirect(request):
@@ -65,3 +66,9 @@ def instructor_dashboard(request):
         }
     )
 
+
+def version_view(request):
+    return JsonResponse({
+        "version": settings.APP_VERSION,
+        "environment": settings.ENVIRONMENT,
+    })
