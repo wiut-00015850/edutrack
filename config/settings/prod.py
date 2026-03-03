@@ -9,13 +9,12 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
-SECURE_SSL_REDIRECT = False  # turn True when HTTPS enabled
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = True  
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
-"http://34.42.159.210",
-"http://myedutrack.uz",
-"http://www.myedutrack.uz",
+"https://myedutrack.uz",
+"https://www.myedutrack.uz",
 ]
 
 SECURE_HSTS_SECONDS = 31536000
@@ -26,4 +25,4 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = "DENY"
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
