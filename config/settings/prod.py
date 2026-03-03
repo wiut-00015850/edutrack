@@ -12,7 +12,11 @@ ALLOWED_HOSTS = [
 SECURE_SSL_REDIRECT = False  # turn True when HTTPS enabled
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
-CSRF_TRUSTED_ORIGINS = ["http://34.42.159.210",]
+CSRF_TRUSTED_ORIGINS = [
+"http://34.42.159.210",
+"http://myedutrack.uz",
+"http://www.myedutrack.uz",
+]
 
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
