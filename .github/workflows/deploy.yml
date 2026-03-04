@@ -26,3 +26,5 @@ jobs:
 
       - name: Run tests (SQLite, CI mode)
         run: docker compose run --rm --entrypoint "" -e CI=true web python manage.py test
+
+# CI pipeline test
