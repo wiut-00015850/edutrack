@@ -19,8 +19,8 @@ if [ "$CI" = "true" ]; then
   exec "$@"
 else
   gunicorn config.wsgi:application --bind 0.0.0.0:8000
-fi
   --workers 3 \
   --timeout 30 \
   --access-logfile - \
   --error-logfile -
+fi
