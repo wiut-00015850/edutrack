@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         run: docker compose run --rm -e CI=true web python manage.py test
-
+#Testing CI/CD
 
   deploy:
     needs: test
