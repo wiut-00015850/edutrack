@@ -26,3 +26,7 @@ SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = "DENY"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+STATIC_URL = "/static/"
+STATIC_ROOT = "/app/staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressManifestStaticFilesStorage"

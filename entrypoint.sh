@@ -9,6 +9,8 @@ done
 echo "Database started"
 
 python manage.py migrate --noinput
+chown -R app:app /app/staticfiles
+rm -rf /app/staticfiles/*
 python manage.py collectstatic --noinput
 
 #exec gunicorn config.wsgi:application \
@@ -19,8 +21,8 @@ if [ "$CI" = "true" ]; then
   exec "$@"
 else
   gunicorn config.wsgi:application --bind 0.0.0.0:8000
-fi
   --workers 3 \
   --timeout 30 \
   --access-logfile - \
   --error-logfile -
+fi
