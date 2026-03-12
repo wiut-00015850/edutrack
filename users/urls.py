@@ -5,6 +5,6 @@ from . import views
 
 urlpatterns = [
     path("redirect/", role_redirect, name="role_redirect"),
-    path("student/", student_dashboard, name="student_dashboard"),
+    path("studentprofile/", student_dashboard, name="student_dashboard"),
     path("instructor/", instructor_dashboard, name="instructor_dashboard"),
 ]
